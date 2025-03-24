@@ -1,26 +1,35 @@
+// src/App.js
 import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Header from './components/Header';
-import ProductList from './components/ProductList';
+import Home from './pages/Home';
+import Products from './pages/Products';
+import Login from './pages/Login';
 import './App.css';
 
 function App() {
   const [products, setProducts] = useState([]);
-  const apiUrl = process.env.REACT_APP_API_URL; // This pulls in your API URL
+  const apiUrl = process.env.REACT_APP_API_URL; // e.g., http://localhost:5000/api
 
   useEffect(() => {
     fetch(`${apiUrl}/products`)
-      .then(response => response.json())
-      .then(data => setProducts(data))
-      .catch(error => console.error('Error fetching products:', error));
+      .then((res) => res.json())
+      .then((data) => setProducts(data))
+      .catch((error) => console.error('Error fetching products:', error));
   }, [apiUrl]);
 
   return (
-    <div>
+    <Router>
       <Header />
       <main>
-        <ProductList products={products} />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/products" element={<Products products={products} />} />
+          <Route path="/login" element={<Login />} />
+          {/* Add more routes here */}
+        </Routes>
       </main>
-    </div>
+    </Router>
   );
 }
 
